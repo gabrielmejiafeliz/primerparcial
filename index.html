@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+    <style>
+    
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .calculator-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .calculator {
+            width: 320px;
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+        #display {
+            width: 100%;
+            font-size: 24px;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: right;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .button {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        .button:hover {
+            background-color: #ddd;
+            transform: scale(1.05);
+        }
+        .button:active {
+            background-color: #aaa;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        h2 {
+            margin-top: 20px;
+            color: #555;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            color: #777;
+            background-color: #f2f2f2;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+        .operators {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .operator {
+            background-color: #f29492;
+            color: #fff;
+        }
+        .operator:hover {
+            background-color: #d76d6d;
+        }
+        .number {
+            background-color: #5bb7d6;
+            color: #fff;
+        }
+        .number:hover {
+            background-color: #4794b5;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="calculator">
+            <h1>Calculadora</h1>
+            <input type="text" id="display" readonly>
+            <div class="buttons">
+                <div class="operators">
+                    <button class="operator" onclick="appendToDisplay('+')">+</button>
+                    <button class="operator" onclick="appendToDisplay('-')">-</button>
+                    <button class="operator" onclick="appendToDisplay('*')">*</button>
+                    <button class="operator" onclick="appendToDisplay('/')">/</button>
+                </div>
+                <button class="number" onclick="appendToDisplay('7')">7</button>
+                <button class="number" onclick="appendToDisplay('8')">8</button>
+                <button class="number" onclick="appendToDisplay('9')">9</button>
+                <button class="number" onclick="appendToDisplay('4')">4</button>
+                <button class="number" onclick="appendToDisplay('5')">5</button>
+                <button class="number" onclick="appendToDisplay('6')">6</button>
+                <button class="number" onclick="appendToDisplay('1')">1</button>
+                <button class="number" onclick="appendToDisplay('2')">2</button>
+                <button class="number" onclick="appendToDisplay('3')">3</button>
+                <button class="number" onclick="appendToDisplay('0')">0</button>
+                <button class="number" onclick="appendToDisplay('.')">.</button>
+                <button class="number" onclick="clearDisplay()">C</button>
+                <button class="number" onclick="calculateResult()">=</button>
+                <button class="number" onclick="clearHistory()">Eliminar Datos</button>
+            </div>
+        </div>
+        <div class="history-container">
+            <h2>Historial de Operaciones</h2>
+            <ul id="history"></ul>
+        </div>
+    </div>
+
+    <script>
+      
+        function addToHistory(expression, result) {
+            const historyList = document.getElementById('history');
+            const listItem = document.createElement('li');
+            listItem.textContent = `${expression} = ${result}`;
+            historyList.appendChild(listItem);
+        }
+
+       
+        function clearDisplay() {
+            document.getElementById('display').value = '';
+        }
+
+        
+        function appendToDisplay(value) {
+            const display = document.getElementById('display');
+            display.value += value;
+        }
+
+        
+        function calculateResult() {
+            const display = document.getElementById('display');
+            try {
+                const result = eval(display.value);
+                addToHistory(display.value, result);
+                display.value = result;
+            } catch (error) {
+                display.value = 'Error';
+            }
+        }
+
+      
+        function clearHistory() {
+            const historyList = document.getElementById('history');
+            historyList.innerHTML = '';
+            localStorage.removeItem('calculatorHistory');
+        }
+
+      
+        function loadHistory() {
+            const historyList = document.getElementById('history');
+            historyList.innerHTML = '';
+            const history = JSON.parse(localStorage.getItem('calculatorHistory')) || [];
+            history.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.textContent = item;
+                historyList.appendChild(listItem);
+            });
+        }
+
+      
+        function saveHistory() {
+            const historyList = document.getElementById('history');
+            const historyItems = Array.from(historyList.getElementsByTagName('li')).map(item => item.textContent);
+            localStorage.setItem('calculatorHistory', JSON.stringify(historyItems));
+        }
+
+        window.addEventListener('load', loadHistory);
+
+       
+        window.addEventListener('beforeunload', saveHistory);
+    </script>
+</body>
+</html>
