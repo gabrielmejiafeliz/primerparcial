@@ -1,0 +1,32 @@
+name: Deploy to Surge
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Build and Deploy
+      run: echo "Deploying!"
+
+    - name: Install Surge
+      run: npm install --global surge
+
+    - name: Deploy to Surge
+      run: surge ./ --mi-pp.surge.sh --token 9b6f45e237d1961f77faba7239edbd4d
+
+      
+
+      
+
+
+      
+
+
