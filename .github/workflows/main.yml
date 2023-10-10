@@ -1,1 +1,21 @@
+name: Deploy to Surge
 
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install Surge
+      run: npm install --global surge
+
+      - name: Deploy to Surge
+      run:  surge ./ electiva-mpp-qui.surge.sh --token 9e9cfb1e437c026e1439ae288aa4beab
+      
